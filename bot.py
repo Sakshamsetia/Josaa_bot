@@ -2,6 +2,8 @@ import logging
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 from ai import ask_gemini
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 
 # --- Configuration ---
@@ -33,9 +35,21 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         logging.error(f"Error while generating response: {e}")
         await update.message.reply_text("Sorry, something went wrong. Please try again.")
+        
+class KeepAliveHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Bot is alive!")
+
+def start_web_server():
+    port = int(os.environ.get("PORT", 10000))  # Render sets $PORT automatically
+    server = HTTPServer(("", port), KeepAliveHandler)
+    server.serve_forever()
 
 # --- Step 6: Run the Bot ---
 if __name__ == '__main__':
+    threading.Thread(target=start_web_server).start()
     application = ApplicationBuilder().token(tg_token).build()
     application.add_handler(CommandHandler('start', start))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
