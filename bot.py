@@ -19,7 +19,7 @@ def teleResponse(user_query: str) -> str:
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "Hey! I’m your IIT Mandi counsellor bot for JOSAA 2025. Ask me anything about branches, placements, fests, or comparisons."
+        "Hey! I’m your IIT Mandi counsellor bot for JOSAA 2025. Ask me anything about branches, placements, fests, or comparisons I am there for help.\n\nIt is Whatsapp group for IIT Mandi Councelling: https://chat.whatsapp.com/FokoEbUXk6S69Vy9oNaiqo \n If you find my answers insufficient, Use it to connect to students there."
     )
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
