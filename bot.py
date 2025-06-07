@@ -2,8 +2,6 @@ import logging
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 from ai import ask_gemini
-import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 
 # --- Configuration ---
@@ -21,7 +19,7 @@ def teleResponse(user_query: str) -> str:
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "Hey! I’m your IIT Mandi counsellor bot for JOSAA 2025. Ask me anything about branches, placements, fests, or comparisons I am there for help.\n\nIt is Whatsapp group for IIT Mandi Councelling: https://chat.whatsapp.com/FokoEbUXk6S69Vy9oNaiqo \n If you find my answers insufficient, Use it to connect to students there."
+        "Hey! I’m your IIT Mandi counsellor bot for JOSAA 2025. Ask me anything about branches, placements, fests, or comparisons I am there for help.\n\nIt is Whatsapp group for IIT Mandi Councelling: https://chat.whatsapp.com/FokoEbUXk6S69Vy9oNaiqo \n If you find my answers insufficient, Use it to connect to students there.\n\n\n\nFeedBack or Suggestions?\ndm me here:@Saksham_setia"
     )
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -36,20 +34,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logging.error(f"Error while generating response: {e}")
         await update.message.reply_text("Sorry, something went wrong. Please try again.")
         
-class KeepAliveHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b"Bot is alive!")
-
-def start_web_server():
-    port = int(os.environ.get("PORT", 10000))  # Render sets $PORT automatically
-    server = HTTPServer(("", port), KeepAliveHandler)
-    server.serve_forever()
-
 # --- Step 6: Run the Bot ---
 if __name__ == '__main__':
-    threading.Thread(target=start_web_server).start()
     application = ApplicationBuilder().token(tg_token).build()
     application.add_handler(CommandHandler('start', start))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
