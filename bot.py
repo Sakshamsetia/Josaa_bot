@@ -19,14 +19,14 @@ def teleResponse(user_query: str) -> str:
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "Hey! I’m your IIT Mandi counsellor bot for JOSAA 2025. Ask me anything about branches, placements, fests, or comparisons I am there for help.\n\nIt is Whatsapp group for IIT Mandi Councelling: https://chat.whatsapp.com/FokoEbUXk6S69Vy9oNaiqo \n If you find my answers insufficient, Use it to connect to students there.\n\n\n\nFeedBack or Suggestions?\ndm me here:@Saksham_setia"
+        "Hey! I’m your IIT Mandi counsellor bot for JOSAA 2025. Ask me anything about branches, placements, fests, or comparisons I am there for help."
     )
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
         return
     user_text = update.message.text.strip()
-    logging.info(f"User {update.message.chat.id} → {user_text}")
+    logging.info(f"\nUser {update.message.chat.first_name} : {user_text}")
     try:
         answer = teleResponse(user_text)
         await update.message.reply_text(answer)
